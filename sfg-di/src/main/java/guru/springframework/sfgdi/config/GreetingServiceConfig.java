@@ -9,11 +9,18 @@ import guru.springframework.sfgdi.services.without.sterio.ConstructorGreetingSer
 import guru.springframework.sfgdi.services.without.sterio.PropertyInjectedGreetingServiceWithoutSterio;
 import guru.springframework.sfgdi.services.without.sterio.SetterInjectedGreetingServiceWithoutSterio;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 
 //@PropertySource("classpath:datasource.properties")
+/**
+ *  this will help to bind SfgConstructorConfig file in configuration.
+ */
+@EnableConfigurationProperties(SfgConstructorConfig.class)
 @ImportResource("classpath:sfgdi-config.xml")
 @Configuration
+
+
 public class GreetingServiceConfig {
     /**
      *  parsing yml file values
@@ -32,15 +39,29 @@ public class GreetingServiceConfig {
 
     /**
      * binding yml property directly in sfgConfiguration file then pass sfgConfiguration object inside FakedataSource
-     * @param sfgConfiguration
+     * @param sfgConstructorConfig
      * @return
      */
-    @Bean
+/*    @Bean
     FakeDataSource fakeDataSource(SfgConfiguration sfgConfiguration){
         FakeDataSource fakeDataSource = new FakeDataSource();
         fakeDataSource.setUsername(sfgConfiguration.getUsername());
         fakeDataSource.setPassword(sfgConfiguration.getPassword());
         fakeDataSource.setJdbcurl(sfgConfiguration.getJdbcurl());
+        return fakeDataSource;
+    }*/
+
+    /**
+     * below method will used to populate YML data in SfgConstructor properties.
+     * @param sfgConstructorConfig
+     * @return
+     */
+    @Bean
+    FakeDataSource fakeDataSource(SfgConstructorConfig sfgConstructorConfig){
+        FakeDataSource fakeDataSource = new FakeDataSource();
+        fakeDataSource.setUsername(sfgConstructorConfig.getUsername());
+        fakeDataSource.setPassword(sfgConstructorConfig.getPassword());
+        fakeDataSource.setJdbcurl(sfgConstructorConfig.getJdbcurl());
         return fakeDataSource;
     }
 
