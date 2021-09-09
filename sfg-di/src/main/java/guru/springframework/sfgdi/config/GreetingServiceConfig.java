@@ -15,7 +15,11 @@ import org.springframework.context.annotation.*;
 @ImportResource("classpath:sfgdi-config.xml")
 @Configuration
 public class GreetingServiceConfig {
-    @Bean
+    /**
+     *  parsing yml file values
+     * @return
+     */
+ /*   @Bean
     FakeDataSource fakeDataSource(@Value("${guru.username}") String username,
                                   @Value("${guru.password}") String password,
                                   @Value("${guru.jdbcurl}") String jdbcurl) {
@@ -23,6 +27,20 @@ public class GreetingServiceConfig {
         fakeDataSource.setUsername(username);
         fakeDataSource.setPassword(password);
         fakeDataSource.setJdbcurl(jdbcurl);
+        return fakeDataSource;
+    }*/
+
+    /**
+     * binding yml property directly in sfgConfiguration file then pass sfgConfiguration object inside FakedataSource
+     * @param sfgConfiguration
+     * @return
+     */
+    @Bean
+    FakeDataSource fakeDataSource(SfgConfiguration sfgConfiguration){
+        FakeDataSource fakeDataSource = new FakeDataSource();
+        fakeDataSource.setUsername(sfgConfiguration.getUsername());
+        fakeDataSource.setPassword(sfgConfiguration.getPassword());
+        fakeDataSource.setJdbcurl(sfgConfiguration.getJdbcurl());
         return fakeDataSource;
     }
 
