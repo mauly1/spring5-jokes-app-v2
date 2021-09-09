@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: EN,dog,prod
+guru:
+    username: prodYMLUserName
+    password: prodYMLPassword
+    jdbcurl:  prodYMLJdbcUrl

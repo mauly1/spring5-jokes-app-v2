@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: EN,dog,qa
+guru:
+    username: qaYMLUserName
+    password: qaYMLPassword
+    jdbcurl:  qaYMLJdbcUrl
