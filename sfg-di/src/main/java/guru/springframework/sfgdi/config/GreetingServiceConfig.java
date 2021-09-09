@@ -1,16 +1,49 @@
 package guru.springframework.sfgdi.config;
 
 import guru.springframework.sfgdi.controllers.without.sterio.PrimaryGreetingServiceWithoutSterio;
+import guru.springframework.sfgdi.datasource.FakeDataSource;
+import guru.springframework.sfgdi.factory.PetServiceFactory;
+import guru.springframework.sfgdi.pets.DogPetService;
+import guru.springframework.sfgdi.pets.PetService;
 import guru.springframework.sfgdi.services.without.sterio.ConstructorGreetingServiceWithoutSterio;
 import guru.springframework.sfgdi.services.without.sterio.PropertyInjectedGreetingServiceWithoutSterio;
 import guru.springframework.sfgdi.services.without.sterio.SetterInjectedGreetingServiceWithoutSterio;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.*;
 
+//@PropertySource("classpath:datasource.properties")
+@ImportResource("classpath:sfgdi-config.xml")
 @Configuration
 public class GreetingServiceConfig {
     @Bean
+    FakeDataSource fakeDataSource(@Value("${guru.username}") String usrname,
+                                  @Value("${guru.password}") String password,
+                                  @Value("${guru.jdbcurl}") String jdbcurl) {
+        FakeDataSource fakeDataSource = new FakeDataSource();
+        fakeDataSource.setUsername(usrname);
+        fakeDataSource.setPassword(password);
+        fakeDataSource.setJdbcurl(jdbcurl);
+        return fakeDataSource;
+    }
+
+    @Bean
+    PetServiceFactory petServiceFactory() {
+        return new PetServiceFactory();
+    }
+
+    @Profile({"dog", "default"})
+    @Bean
+    PetService DogPetService(PetServiceFactory petServiceFactory) {
+        return petServiceFactory.getPetService("dog");
+    }
+
+    @Profile("cat")
+    @Bean
+    PetService CatPetService(PetServiceFactory petServiceFactory) {
+        return petServiceFactory.getPetService("cat");
+    }
+
+    //  @Bean
     ConstructorGreetingServiceWithoutSterio constructorGreetingServiceWithoutSterio() {
         return new ConstructorGreetingServiceWithoutSterio();
     }
@@ -24,9 +57,10 @@ public class GreetingServiceConfig {
     SetterInjectedGreetingServiceWithoutSterio setterInjectedGreetingServiceWithoutSterio() {
         return new SetterInjectedGreetingServiceWithoutSterio();
     }
+
     @Primary
     @Bean
-    PrimaryGreetingServiceWithoutSterio  primaryGreetingServiceWithoutSterio(){
+    PrimaryGreetingServiceWithoutSterio primaryGreetingServiceWithoutSterio() {
         return new PrimaryGreetingServiceWithoutSterio();
     }
 }
